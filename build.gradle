@@ -7,11 +7,11 @@ plugins {
 }
 
 group 'codedcosmos'
-version '1.7'
+version '1.8'
 mainClassName = 'codedcosmos.cometbot.core.CometBot'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 8
+targetCompatibility = 8
 
 repositories {
     mavenCentral()
