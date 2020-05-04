@@ -16,6 +16,3 @@ Song control update
 ### User experience
 * Removed redundent stop messages when the bot leaves etc
 * Displays when nowplaying track is livestream
-
-### Bug fixes
-* Made the bot messages channel more reliable
