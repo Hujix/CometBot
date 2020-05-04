@@ -21,7 +21,7 @@ For search support
 
 
 ## Features
-* 23 Commands
+* 26 Commands
 * Automatic Search
 * Can play from Youtube, SoundCloud, Bandcamp, Vimeo and Twitch Streams
 * Playlist support
@@ -35,4 +35,5 @@ For search support
 * Queue and queuelength commands
 * Shuffle support
 * Skip, Stop, Pause and Play
+* Seek support
 * High performance and bitrate
