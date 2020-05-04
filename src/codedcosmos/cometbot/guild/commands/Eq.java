@@ -2,16 +2,9 @@ package codedcosmos.cometbot.guild.commands;
 
 import codedcosmos.cometbot.core.CometBot;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
-import codedcosmos.cometbot.guild.voice.speaker.SpeakerStatus;
-import codedcosmos.cometbot.utils.web.SearchTrack;
-import codedcosmos.cometbot.utils.web.YoutubeSearcher;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.command.Command;
-import codedcosmos.hyperdiscord.utils.debug.Log;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Eq implements Command {
 	@Override

@@ -16,7 +16,7 @@ package codedcosmos.cometbot.guild.commands;
 
 import codedcosmos.cometbot.core.CometBot;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
-import codedcosmos.cometbot.guild.voice.speaker.MusicSpeaker;
+import codedcosmos.cometbot.audio.speaker.MusicSpeaker;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.command.Command;
 import codedcosmos.hyperdiscord.utils.text.TextUtils;

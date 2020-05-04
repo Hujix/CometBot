@@ -15,7 +15,7 @@
 package codedcosmos.cometbot.guild.context;
 
 import codedcosmos.cometbot.guild.chat.messages.built.help.HelpMessage;
-import codedcosmos.cometbot.guild.chat.messages.built.lastplaying.NowPlayingMessage;
+import codedcosmos.cometbot.guild.chat.messages.built.nowplaying.NowPlayingMessage;
 import codedcosmos.cometbot.guild.chat.messages.built.queue.QueueMessage;
 import codedcosmos.cometbot.guild.chat.messages.built.search.SearchMessage;
 import codedcosmos.hyperdiscord.chat.reactions.ReactionReactor;

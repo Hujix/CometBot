@@ -16,8 +16,8 @@ package codedcosmos.cometbot.guild.chat.messages.built.queue;
 
 import codedcosmos.cometbot.guild.commands.QueueLength;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
-import codedcosmos.cometbot.guild.voice.speaker.MusicSpeaker;
-import codedcosmos.cometbot.guild.voice.track.LoadedTrack;
+import codedcosmos.cometbot.audio.speaker.MusicSpeaker;
+import codedcosmos.cometbot.audio.track.LoadedTrack;
 import codedcosmos.hyperdiscord.chat.messages.BookMessage;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;

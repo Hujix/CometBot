@@ -14,7 +14,8 @@
 
 package codedcosmos.cometbot.guild.context;
 
-import codedcosmos.cometbot.guild.voice.speaker.MusicSpeaker;
+import codedcosmos.cometbot.audio.input.AudioReciever;
+import codedcosmos.cometbot.audio.speaker.MusicSpeaker;
 import codedcosmos.hyperdiscord.guild.GuildContext;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -28,6 +29,8 @@ public class CometGuildContext extends GuildContext {
 	private boolean isConnectedToVoice;
 	private VoiceChannel voiceChannel;
 	
+	private AudioReciever reciever;
+	
 	// Chat
 	private DynamicMessages dynamicMessages;
 	
@@ -35,6 +38,7 @@ public class CometGuildContext extends GuildContext {
 		super(guild);
 		
 		this.speaker = new MusicSpeaker(this);
+		reciever = new AudioReciever();
 		isConnectedToVoice = false;
 		
 		dynamicMessages = new DynamicMessages(this);
@@ -77,5 +81,9 @@ public class CometGuildContext extends GuildContext {
 	
 	public DynamicMessages getDynamicMessages() {
 		return dynamicMessages;
+	}
+	
+	public AudioReciever getReciever() {
+		return reciever;
 	}
 }
