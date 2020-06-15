@@ -1,0 +1,50 @@
+package codedcosmos.cometbot.core;
+
+import codedcosmos.cometbot.guild.context.CometGuildContext;
+import codedcosmos.hyperdiscord.utils.debug.Log;
+
+public class CometExecutor extends ExecutorThread {
+	
+	private long lastMillis;
+	
+	public CometExecutor() {
+		super("TickingThread", 10);
+		
+		lastMillis = System.currentTimeMillis();
+	}
+	
+	@Override
+	public void onStart() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			Log.printErr(e);
+		}
+	}
+	
+	@Override
+	public void onStop() {
+	
+	}
+	
+	@Override
+	public void run() {
+		try {
+			// Tick every 10 seconds
+			if (System.currentTimeMillis() > lastMillis+(1000*10)) {
+				lastMillis = System.currentTimeMillis();
+				for (CometGuildContext guild : CometBot.guilds.getGuilds()) {
+					guild.getSpeaker().tick10s();
+				}
+			}
+			
+			// Tick every 100 milliseconds
+			for (CometGuildContext guild : CometBot.guilds.getGuilds()) {
+				guild.getSpeaker().tick100ms();
+				guild.tick100ms();
+			}
+		} catch (Exception e) {
+			Log.printErr(e);
+		}
+	}
+}

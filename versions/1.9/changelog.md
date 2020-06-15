@@ -1,4 +1,4 @@
-## CometBot - v1.8
+## CometBot - v1.9
 
 Small bug fix update
 
