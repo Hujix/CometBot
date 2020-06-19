@@ -1,4 +1,4 @@
-<img align="right" src="https://raw.githubusercontent.com/codedcosmos/CometBot/master/logo/logo.png" height="200" width="200">
+<img align="right" src="https://raw.githubusercontent.com/codedcosmos/CometBot/master/resources/logo/logo.png" height="200" width="200">
 
 # CometBot
 ### By codedcosmos
