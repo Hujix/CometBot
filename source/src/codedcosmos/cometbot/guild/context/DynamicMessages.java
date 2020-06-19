@@ -65,6 +65,10 @@ public class DynamicMessages implements ReactionReactor {
 	// Search message
 	private SearchMessage searchMessage;
 	
+	public void forceCompleteSearchMessage() {
+		searchMessage.forceComplete();
+	}
+	
 	public void sendSearchMessage(String search) {
 		searchMessage.forceComplete();
 		searchMessage = new SearchMessage(context);
@@ -83,6 +87,12 @@ public class DynamicMessages implements ReactionReactor {
 		nowPlayingMessage = new NowPlayingMessage(context);
 	}
 	
+	public void completeNowPlayingMessagesSongAsError() {
+		nowPlayingMessage.setErrored();
+		nowPlayingMessage.forceComplete();
+		nowPlayingMessage = new NowPlayingMessage(context);
+	}
+	
 	public void updateNowPlayingState() {
 		if (nowPlayingMessage.hasSongCompleted()) return;
 		
@@ -94,6 +104,10 @@ public class DynamicMessages implements ReactionReactor {
 	// Help
 	private HelpMessage helpMessage;
 	
+	public void forceCompleteHelpMessage() {
+		helpMessage.clearReactions();
+	}
+	
 	public void sendHelpMessage(String content) {
 		helpMessage.clearReactions();
 		helpMessage = new HelpMessage(context, content);
@@ -104,6 +118,10 @@ public class DynamicMessages implements ReactionReactor {
 	
 	// Queue
 	private QueueMessage queueMessage;
+	
+	public void forceCompleteQueueMessage() {
+		queueMessage.clearReactions();
+	}
 	
 	public void sendQueueMessage() {
 		queueMessage.clearReactions();

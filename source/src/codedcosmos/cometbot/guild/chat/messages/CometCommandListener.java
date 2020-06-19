@@ -17,6 +17,7 @@ package codedcosmos.cometbot.guild.chat.messages;
 import codedcosmos.cometbot.core.CometBot;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
 import codedcosmos.hyperdiscord.chat.TextSender;
+import codedcosmos.hyperdiscord.command.Command;
 import codedcosmos.hyperdiscord.command.CommandListener;
 import codedcosmos.hyperdiscord.utils.debug.Log;
 import net.dv8tion.jda.api.entities.Guild;
@@ -47,5 +48,11 @@ public class CometCommandListener extends CommandListener<CometGuildContext> {
 		Log.printErr("Command Message: '" + event.getMessage().getContentRaw() + "'");
 		Log.printErr("");
 		Log.printErr(e);
+	}
+	
+	@Override
+	protected void onCommandRun(MessageReceivedEvent event, Command command) {
+		CometGuildContext context = CometBot.guilds.getContextBy(event.getGuild());
+		context.getStatsRecorder().addCommandsEntered(1);
 	}
 }

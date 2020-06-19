@@ -18,6 +18,7 @@ import codedcosmos.cometbot.core.CometBot;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.command.Command;
+import codedcosmos.hyperdiscord.utils.debug.Log;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -47,12 +48,20 @@ public class Leave implements Command {
 		
 		disconnect(event.getGuild());
 	}
-
+	
 	public static void disconnect(Guild guild) {
+		Log.print("Disconnected");
 		guild.getAudioManager().closeAudioConnection();
 		
 		CometGuildContext context = CometBot.guilds.getContextBy(guild);
-		context.disconnectFromVoice();
+		context.disconnectFromVoice("Left channel, guess the party is over.");
+	}
+	
+	public static void disconnect(Guild guild, String message) {
+		guild.getAudioManager().closeAudioConnection();
+		
+		CometGuildContext context = CometBot.guilds.getContextBy(guild);
+		context.disconnectFromVoice(message);
 	}
 
 	public String[] getAliases() {
@@ -149,7 +158,13 @@ public class Leave implements Command {
 			
 			return true;
 		} else {
+			// Save
+			context.save();
+			
+			// Reset leave count easter egg
 			leaveCount = 0;
+			
+			// return
 			return false;
 		}
 	}

@@ -90,7 +90,7 @@ public class Join implements Command {
 					return false;
 				}
 
-				context.setVoiceChannel(channel);
+				context.connectToVoice(channel);
 
 				return true;
 			}

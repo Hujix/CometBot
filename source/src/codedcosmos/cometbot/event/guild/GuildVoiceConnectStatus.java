@@ -33,18 +33,16 @@ public class GuildVoiceConnectStatus  {
 			if (!event.getChannelLeft().getMembers().get(0).getUser().isBot()) return;
 			
 			Leave.disconnect(event.getGuild());
-			Log.print("Left channel, because noone was in there.");
 		}
 	}
 
 	public static void onVoiceMoveEvent(GuildVoiceMoveEvent event) {
 		// Check to see how many people are in guild voice channel
-		if (event.getChannelLeft().getMembers().size() == 1) {
+		if (event.getChannelJoined().getMembers().size() == 1) {
 			// Make sure it's a bot
-			if (!event.getChannelLeft().getMembers().get(0).getUser().isBot()) return;
+			if (!event.getChannelJoined().getMembers().get(0).getUser().isBot()) return;
 			
-			Leave.disconnect(event.getGuild());
-			Log.print("Left channel, because noone was in there.");
+			Leave.disconnect(event.getGuild(), "Left channel, because I got moved to an empty one!");
 		}
 	}
 }

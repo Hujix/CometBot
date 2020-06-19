@@ -43,6 +43,6 @@ public class Pause implements Command {
 	}
 
 	public String[] getAliases() {
-		return new String[] {"Halt"};
+		return new String[] {"rest", "holdup"};
 	}
 }

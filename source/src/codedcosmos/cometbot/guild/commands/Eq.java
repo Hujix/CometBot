@@ -32,7 +32,9 @@ public class Eq implements Command {
 
 		if (args.length > 2) {
 			TextSender.send(event, "To many arguments");
-		} else if (args[1].equals("normal")) {
+		} else if (args.length == 0) {
+			TextSender.send(event, "This command requires at least 1 argument");
+		} if (args[1].equals("normal")) {
 			context.getSpeaker().getPlayer().disableEq();
 			TextSender.send(event, "Now using a balanced eq");
 		} else if (args[1].equals("bass")) {
@@ -42,7 +44,7 @@ public class Eq implements Command {
 			context.getSpeaker().getPlayer().trebleBoost();
 			TextSender.send(event, "Now playing treble-boosted audio");
 		} else {
-			TextSender.send(event, "Invalid eq setting, must be one of these 'bass, normal and treble'");
+			TextSender.send(event, "Invalid eq setting, must be one of these 'bass, normal or treble'");
 		}
 	}
 	

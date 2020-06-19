@@ -14,6 +14,8 @@
 
 package codedcosmos.cometbot.guild.commands;
 
+import codedcosmos.cometbot.core.CometBot;
+import codedcosmos.cometbot.guild.context.CometGuildContext;
 import codedcosmos.hyperdiscord.command.Command;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -35,8 +37,13 @@ public class GoodBot implements Command {
 	
 	@Override
 	public void run(MessageReceivedEvent event) throws Exception {
+		// Sent heart
 		Thread.sleep(500);
 		event.getMessage().addReaction("\u2665").complete();
+		
+		// Increment stat
+		CometGuildContext context = CometBot.guilds.getContextBy(event.getGuild());
+		context.getStatsRecorder().addGoodbots(1);
 	}
 	
 	@Override

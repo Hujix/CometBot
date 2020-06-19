@@ -34,6 +34,7 @@ public class Forward implements Command {
 		try {
 			int time = Integer.parseInt(text[1]);
 			context.getSpeaker().forward(time);
+			TextSender.send(event, "Skipped forward by " + time + " seconds");
 		} catch (NumberFormatException e) {
 			TextSender.send(event, "Invalid time signature");
 		}

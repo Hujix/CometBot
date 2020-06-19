@@ -40,14 +40,19 @@ public class NowPlayingMessage extends DynamicMessage {
 	private EmbedBuilder embedBuilder;
 	private Message message;
 	
+	// Song
+	private String songLink;
+	
 	// Reactions
 	private ReactionBox playpause;
 	private ReactionBox stop;
 	private ReactionBox skip;
 	private ReactionBox like;
 	
+	// State
 	private boolean sent = false;
-
+	private boolean errored = false;
+	
 	public NowPlayingMessage(CometGuildContext context) {
 		super(context);
 		this.speaker = context.getSpeaker();
@@ -64,6 +69,7 @@ public class NowPlayingMessage extends DynamicMessage {
 		builder.append(messageText);
 
 		LoadedTrack track = speaker.getCurrentTrack();
+		songLink = track.getLink();
 
 		// Update embed builder
 		embedBuilder.clearFields();
@@ -85,7 +91,9 @@ public class NowPlayingMessage extends DynamicMessage {
 		
 		// Description
 		String description = "";
-		if (songHasCompleted) {
+		if (errored) {
+			description += "Error";
+		} else if (songHasCompleted) {
 			description += "Completed";
 		} else {
 			description += "**"+speaker.getCurrentTimestamp()+"**";
@@ -142,13 +150,45 @@ public class NowPlayingMessage extends DynamicMessage {
 	
 	@Override
 	public void postUpdate(Message message) {
-		if (songHasCompleted) {
-			message.clearReactions().complete();
+		if (songHasCompleted || errored) {
 			Log.print("Clearing Now Playing Reactions");
+			
+			// Add slight delay if errored to confirm removal of all reactions
+			if (errored) {
+				try { Thread.sleep(5000); } catch (InterruptedException e) { Log.printErr(e); }
+			}
+			
+			message.clearReactions().complete();
 		}
 	}
 	
 	public void completeSong() {
+		if (!sent || songHasCompleted) return;
+		
+		// Save likes
+		int newLikes = like.getCount()-1;
+		speaker.getContext().incrementSongLikes(songLink, newLikes);
+		
+		// Increment stats
+		CometGuildContext context = speaker.getContext();
+		context.getStatsRecorder().addLikes(newLikes);
+		context.getStatsRecorder().addTracksPlayed(1);
+		
+		// Print
+		Log.print("Added " + newLikes + " to song " + songLink);
+		
+		// Complete
+		completeMessage();
+	}
+	
+	public void forceComplete() {
+		if (!songHasCompleted) {
+			Log.print("Force completing NowPlaying message");
+			completeMessage();
+		}
+	}
+	
+	private void completeMessage() {
 		this.songHasCompleted = true;
 		updateState();
 	}
@@ -157,9 +197,13 @@ public class NowPlayingMessage extends DynamicMessage {
 		return songHasCompleted;
 	}
 	
+	public void setErrored() {
+		errored = true;
+	}
+	
 	@Override
 	public void onReactionAdd(GuildMessageReactionAddEvent event) {
-		if (!sent) return;
+		if (!sent || errored) return;
 		
 		playpause.onReactionAdd(event);
 		stop.onReactionAdd(event);
@@ -184,7 +228,7 @@ public class NowPlayingMessage extends DynamicMessage {
 	
 	@Override
 	public void onReactionRemove(GuildMessageReactionRemoveEvent event) {
-		if (!sent) return;
+		if (!sent || errored) return;
 		
 		playpause.onReactionRemove(event);
 		stop.onReactionRemove(event);

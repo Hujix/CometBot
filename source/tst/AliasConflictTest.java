@@ -1,5 +1,4 @@
 import codedcosmos.cometbot.guild.chat.messages.CometCommandListener;
-import codedcosmos.hyperdiscord.utils.text.OrderedString;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,16 +9,16 @@ public class AliasConflictTest {
 	@Test
 	public void aliasConflictCheck() {
 		CometCommandListener cmdListener = new CometCommandListener();
-		ArrayList<OrderedString> suggestions = cmdListener.getSuggestions("a");
+		ArrayList<String> aliases = cmdListener.getAliases();
 		
-		for (OrderedString a : suggestions) {
-			for (OrderedString b : suggestions) {
-				int i = 0;
-				if (a.getCompareText().equals(b.getCompareText())) {
+		for (String a : aliases) {
+			int i = 0;
+			for (String b : aliases) {
+				if (a.equals(b)) {
 					i++;
 				}
 				if (i > 1) {
-					fail("Alias Conflict found with " + a.getCompareText());
+					fail("Alias Conflict found with " + a);
 				}
 			}
 		}

@@ -14,7 +14,6 @@
 
 package codedcosmos.cometbot.core;
 
-import codedcosmos.cometbot.database.CometDatabase;
 import codedcosmos.cometbot.event.EventHandler;
 import codedcosmos.cometbot.guild.chat.messages.CometCommandListener;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
@@ -35,9 +34,10 @@ import java.util.Random;
 
 public class CometBot {
 
-	// Version
-	public static final String VERSION = "1.9";
-
+	// Cometbot
+	public static final String VERSION = "2.0";
+	public static String AVATAR_URL;
+	
 	// Guilds
 	public static GuildHandler<CometGuildContext> guilds;
 	
@@ -47,9 +47,6 @@ public class CometBot {
 	// Math
 	public static Random random = new Random();
 	
-	// Database
-	public static CometDatabase database;
-
 	public static void main(String[] args) {
 		Log.print("Starting Comet Bot " + VERSION);
 
@@ -72,32 +69,34 @@ public class CometBot {
 		// Prepare music player
 		MusicPlayer.init();
 		Log.print("Prepared Music Player");
-
-		// Connect to database
-		try {
-			database = new CometDatabase();
-		} catch (Exception e) {
-			Log.printErr("Failed to connect to database");
-			Log.printErr(e);
-			return;
-		}
 		
+		// Startup JDA
 		try {
 			JDABuilder builder = JDABuilder.createDefault(token);
 
 			builder.setActivity(Activity.listening(".help"));
 			builder.addEventListeners(commands);
 			builder.addEventListeners(new EventHandler());
+			builder.setEnableShutdownHook(true);
 			
 			// JDA-nas
 			builder.setAudioSendFactory(new NativeAudioSendFactory());
 			
 			JDA jda = builder.build();
-
+			AVATAR_URL = jda.getSelfUser().getAvatarUrl();
+			
 			ExecutorThread thread = new CometExecutor();
 			thread.start();
 		} catch (LoginException e) {
 			Log.printErr(e);
 		}
+	}
+	
+	public static void shutdown() {
+		Log.print("Executing shutdown hook...");
+		for (CometGuildContext guild : guilds.getGuilds()) {
+			guild.shutdown();
+		}
+		Log.print("Executed shutdown hook");
 	}
 }

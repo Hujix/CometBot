@@ -2,6 +2,7 @@ package codedcosmos.cometbot.guild.commands;
 
 import codedcosmos.cometbot.core.CometBot;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
+import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.command.Command;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -23,6 +24,11 @@ public class AutoVolume implements Command {
 	
 	@Override
 	public void run(MessageReceivedEvent event) throws Exception {
+		if (event.getMessageIdLong() != 0 || event != null) {
+			TextSender.send(event, "This command is currently disabled");
+			return;
+		}
+		
 		CometGuildContext context = CometBot.guilds.getContextBy(event.getGuild());
 		context.getSpeaker().toggleAutoVolume();
 	}

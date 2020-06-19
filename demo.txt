@@ -1,14 +1,39 @@
 .play alone
-.search all star
-.eq bass
-.eq normal
+
+SHOW BUTTONS
+
+Works with livestreams
+.play low fi hip hop
+
 .skip
-Do pause play
-.shuffle
+
+.search all star
+
+.eq bass
+
+.eq normal
+
+.skip
+
+.playagain
+
+.forward 15
+
+.seek 10
+
 Works with youtube playlists
-.play https://www.youtube.com/watch?v=RwltBfb-GUM&list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67
+.play https://www.youtube.com/watch?v=C2OZhgIun94&list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67
+
+.shuffle
+
+.loop
+
 .queue
+
 .queuelength
+
 .help
-.leave
+
+.purpose
+
 .goodbot

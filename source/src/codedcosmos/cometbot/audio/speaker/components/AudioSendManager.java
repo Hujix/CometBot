@@ -14,10 +14,9 @@
 
 package codedcosmos.cometbot.audio.speaker.components;
 
-import codedcosmos.cometbot.audio.lava.EqSettings;
 import codedcosmos.cometbot.audio.lava.AudioPlayerSendHandler;
+import codedcosmos.cometbot.audio.lava.EqSettings;
 import codedcosmos.cometbot.audio.lava.MusicPlayer;
-import codedcosmos.cometbot.utils.unicode.UnicodeReactions;
 import codedcosmos.hyperdiscord.utils.debug.Log;
 import codedcosmos.hyperdiscord.utils.text.TextUtils;
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
@@ -105,6 +104,11 @@ public class AudioSendManager {
 	
 	// Getters
 	public String getCurrentTimestamp() {
+		if (player.getPlayingTrack() == null) {
+			Log.printErr("Currently playing track was null, can't get timestamp");
+			return "null";
+		}
+		
 		if (player.getPlayingTrack().getInfo().isStream) {
 			return "Live";
 		}

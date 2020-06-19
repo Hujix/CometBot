@@ -4,6 +4,7 @@ import codedcosmos.cometbot.core.CometBot;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.command.Command;
+import codedcosmos.hyperdiscord.utils.text.TextUtils;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Seek implements Command {
@@ -34,6 +35,7 @@ public class Seek implements Command {
 		try {
 			int time = Integer.parseInt(text[1]);
 			context.getSpeaker().seek(time);
+			TextSender.send(event, "Seeked to " + TextUtils.convertToMMSS(time*1000));
 		} catch (NumberFormatException e) {
 			TextSender.send(event, "Invalid time signature");
 		}

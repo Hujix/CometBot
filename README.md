@@ -21,7 +21,7 @@ For search support
 
 
 ## Features
-* 26 Commands
+* 36 Commands
 * Automatic Search
 * Can play from Youtube, SoundCloud, Bandcamp, Vimeo and Twitch Streams
 * Playlist support
@@ -29,6 +29,8 @@ For search support
 * Equaliser
 * Advanced help command
 * Cool now playing message
+* Loops
+* Stats
 * Play again command
 * Play next command
 * Easter eggs
@@ -36,4 +38,5 @@ For search support
 * Shuffle support
 * Skip, Stop, Pause and Play
 * Seek support
-* High performance and bitrate
+* High performance and bitrate\
+* And more!

@@ -14,15 +14,16 @@
 
 package codedcosmos.cometbot.audio.speaker;
 
+import codedcosmos.cometbot.audio.speaker.components.AudioSendManager;
+import codedcosmos.cometbot.audio.speaker.components.TrackList;
 import codedcosmos.cometbot.audio.speaker.components.VolumeManager;
 import codedcosmos.cometbot.audio.track.LoadedTrack;
 import codedcosmos.cometbot.guild.context.CometGuildContext;
-import codedcosmos.cometbot.audio.speaker.components.AudioSendManager;
-import codedcosmos.cometbot.audio.speaker.components.TrackList;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.utils.debug.Log;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
@@ -85,7 +86,7 @@ public class MusicSpeaker extends AudioEventAdapter {
 				}
 			}
 			
-			LoadedTrack loadedTrack = trackList.getTrackFromQueue();
+			LoadedTrack loadedTrack = trackList.getTrackFromQueue(this);
 			
 			// Set Current Track
 			currentTrack = loadedTrack;
@@ -139,19 +140,41 @@ public class MusicSpeaker extends AudioEventAdapter {
 	
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		// Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
-		if (trackList.getLoopStatus() == LoopStatus.LoopSong && endReason.mayStartNext) {
-			this.player.startTrack(track.makeClone());
-			return;
+		try {
+			// Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
+			if (trackList.getLoopStatus() == LoopStatus.LoopSong && endReason.mayStartNext) {
+				// Clone
+				this.player.startTrack(track.makeClone());
+				
+				// Increment stats
+				context.getStatsRecorder().addTracksQueued(1);
+				context.getStatsRecorder().addTracksPlayed(1);
+				
+				return;
+			}
+			
+			context.getDynamicMessages().completeNowPlayingMessagesSong();
+			
+			status = SpeakerStatus.Waiting;
+			
+			if (endReason.mayStartNext) {
+				play(false);
+				return;
+			}
+		} catch (Exception e) {
+			Log.printErr(e);
 		}
-		
-		context.getDynamicMessages().completeNowPlayingMessagesSong();
-		
-		status = SpeakerStatus.Waiting;
-		
-		if (endReason.mayStartNext) {
-			play(false);
-			return;
+	}
+	
+	@Override
+	public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+		try {
+			Log.printErr("Caught track exception");
+			Log.printErr(exception);
+			context.getDynamicMessages().completeNowPlayingMessagesSongAsError();
+		} catch (Exception e) {
+			Log.printErr(e);
+			stop(true);
 		}
 	}
 	
@@ -259,7 +282,7 @@ public class MusicSpeaker extends AudioEventAdapter {
 	
 	public void addPlay(String[] links, TextChannel channel, String dj) {
 		// Add First one (This will block for that one link)
-		trackList.addToQueue(channel, dj, links, true);
+		trackList.addToQueue(this, channel, dj, links, true);
 		
 		// Check if no links where given, when song is already playing
 		if (status == SpeakerStatus.Playing && links.length == 0) {
@@ -273,6 +296,8 @@ public class MusicSpeaker extends AudioEventAdapter {
 		// Let user know number of songs in queue, if added
 		if (trackList.size() > 1 && links.length != 0) {
 			TextSender.sendThenWait(channel,"There are now " + trackList.size() + " songs in the queue!");
+		} else if (trackList.size() == 1 && links.length != 0) {
+			TextSender.sendThenWait(channel,"There are now 1 song in the queue!");
 		}
 	}
 	
@@ -290,7 +315,7 @@ public class MusicSpeaker extends AudioEventAdapter {
 			return;
 		}
 		
-		trackList.addPlayNext(event.getTextChannel(), links[0], event.getAuthor().getName());
+		trackList.addPlayNext(this, event.getTextChannel(), links[0], event.getAuthor().getName());
 		
 		if (status == SpeakerStatus.Playing) {
 			TextSender.sendThenWait(event, "Added song to play next");
@@ -299,8 +324,8 @@ public class MusicSpeaker extends AudioEventAdapter {
 		}
 	}
 	
-	public void leave() {
-		TextSender.sendThenWait(context.getBotTextChannel(), "Left channel, guess the party is over.");
+	public void leave(String message) {
+		TextSender.sendThenWait(context.getBotTextChannel(), message);
 		clearSongs();
 		stop(false);
 	}
@@ -331,5 +356,9 @@ public class MusicSpeaker extends AudioEventAdapter {
 	
 	public TrackList getTrackList() {
 		return trackList;
+	}
+	
+	public CometGuildContext getContext() {
+		return context;
 	}
 }

@@ -1,7 +1,5 @@
 package codedcosmos.cometbot.audio.speaker.components;
 
-import codedcosmos.hyperdiscord.utils.debug.Log;
-
 public class VolumeManager {
 	
 	// Volume

@@ -2,7 +2,6 @@ package codedcosmos.cometbot.audio.input;
 
 import codedcosmos.hyperdiscord.utils.debug.Log;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
-import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.OpusPacket;
 
 import javax.annotation.Nonnull;
@@ -37,11 +36,12 @@ public class PacketReciever implements AudioReceiveHandler {
 	
 	@Override
 	public void handleEncodedAudio(@Nonnull OpusPacket packet) {
+		Log.printErr("Packet recieved encoded");
 		lastPacketTime = System.currentTimeMillis();
 	}
 	
 	public void tick100ms() {
-		audioIsBeingPlayed = (!(System.currentTimeMillis() > lastPacketTime + 500));
+		audioIsBeingPlayed = (!(System.currentTimeMillis() > lastPacketTime + 200));
 	}
 	
 	public boolean isAudioIsBeingPlayed() {

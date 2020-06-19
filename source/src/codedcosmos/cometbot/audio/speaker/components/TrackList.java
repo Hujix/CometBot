@@ -14,9 +14,10 @@
 
 package codedcosmos.cometbot.audio.speaker.components;
 
-import codedcosmos.cometbot.audio.speaker.LoopStatus;
-import codedcosmos.cometbot.audio.track.LoadedTrack;
 import codedcosmos.cometbot.audio.lava.MusicPlayer;
+import codedcosmos.cometbot.audio.speaker.LoopStatus;
+import codedcosmos.cometbot.audio.speaker.MusicSpeaker;
+import codedcosmos.cometbot.audio.track.LoadedTrack;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.utils.debug.Log;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -59,25 +60,28 @@ public class TrackList {
 	}
 	
 	// Adding
-	public void addSong(AudioTrack audioTrack, String dj, String link) {
+	public void addSong(MusicSpeaker speaker, AudioTrack audioTrack, String dj, String link) {
 		LoadedTrack track = new LoadedTrack(audioTrack, dj, link);
 		queue.add(track);
 		Log.print("Added song: " + track.summary());
+		
+		// Increment stats
+		speaker.getContext().getStatsRecorder().addTracksQueued(1);
 	}
 	
-	public void addSongs(AudioPlaylist audioPlaylist, String dj, String link) {
-		int songsAdded = 0;
-		
+	public void addSongs(MusicSpeaker speaker, AudioPlaylist audioPlaylist, String dj, String link) {
 		for (AudioTrack audioTrack : audioPlaylist.getTracks()) {
 			LoadedTrack track = new LoadedTrack(audioTrack, dj, link);
 			queue.add(track);
-			songsAdded++;
 		}
 		
-		Log.print("Added " + songsAdded + "/" + audioPlaylist.getTracks().size() + " songs from playlist: " + link);
+		// Increment stats
+		speaker.getContext().getStatsRecorder().addTracksQueued(audioPlaylist.getTracks().size());
+		
+		Log.print("Added " + audioPlaylist.getTracks().size() + "/" + audioPlaylist.getTracks().size() + " songs from playlist: " + link);
 	}
 	
-	public void addToQueue(TextChannel channel, String dj, String[] links, boolean block) {
+	public void addToQueue(MusicSpeaker speaker, TextChannel channel, String dj, String[] links, boolean block) {
 		links = processLinks(links);
 		
 		ArrayList<Future<Void>> futures = new ArrayList<Future<Void>>(links.length);
@@ -86,12 +90,12 @@ public class TrackList {
 			Future<Void> queueThread = MusicPlayer.getPlayerManager().loadItemOrdered(channel, link, new AudioLoadResultHandler() {
 				@Override
 				public void trackLoaded(AudioTrack audioTrack) {
-					addSong(audioTrack, dj, link);
+					addSong(speaker, audioTrack, dj, link);
 				}
 				
 				@Override
 				public void playlistLoaded(AudioPlaylist audioPlaylist) {
-					addSongs(audioPlaylist, dj, link);
+					addSongs(speaker, audioPlaylist, dj, link);
 				}
 				
 				@Override
@@ -121,11 +125,11 @@ public class TrackList {
 		}
 	}
 	
-	public void addPlayNext(TextChannel channel, String link, String dj) {
+	public void addPlayNext(MusicSpeaker speaker, TextChannel channel, String link, String dj) {
 		Future<Void> future = MusicPlayer.getPlayerManager().loadItemOrdered(channel, link, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack audioTrack) {
-				addPlayNext(audioTrack, dj, link);
+				addPlayNext(speaker, audioTrack, dj, link);
 			}
 			
 			@Override
@@ -149,9 +153,12 @@ public class TrackList {
 		}
 	}
 	
-	public void addPlayNext(AudioTrack track, String dj, String link) {
+	public void addPlayNext(MusicSpeaker speaker, AudioTrack track, String dj, String link) {
 		playNext = new LoadedTrack(track, dj, link);
 		playNextAvaliable = true;
+		
+		// Increment stats
+		speaker.getContext().getStatsRecorder().addTracksQueued(1);
 	}
 	
 	// Utils
@@ -171,7 +178,7 @@ public class TrackList {
 	}
 	
 	// Retrieving
-	public LoadedTrack getTrackFromQueue() {
+	public LoadedTrack getTrackFromQueue(MusicSpeaker speaker) {
 		// Increment total
 		songsPlayed++;
 		
@@ -190,6 +197,9 @@ public class TrackList {
 			// Remove song if not looping
 			if (loopStatus != LoopStatus.NoLoop) {
 				queue.add(loadedTrack.makeClone());
+				
+				// Increment stats
+				speaker.getContext().getStatsRecorder().addTracksQueued(1);
 			}
 			queue.remove(i);
 			
@@ -227,6 +237,10 @@ public class TrackList {
 		}
 	}
 	
+	public void setShuffling(boolean shuffle) {
+		isShuffling = shuffle;
+	}
+	
 	public void cycleLooping(TextChannel channel) {
 		if (loopStatus == LoopStatus.NoLoop) {
 			loopStatus = LoopStatus.Loop;
@@ -238,6 +252,10 @@ public class TrackList {
 			loopStatus = LoopStatus.NoLoop;
 			TextSender.send(channel, "Not looping Tracks");
 		}
+	}
+	
+	public void setLoopStatus(LoopStatus status) {
+		loopStatus = status;
 	}
 	
 	// Time length
