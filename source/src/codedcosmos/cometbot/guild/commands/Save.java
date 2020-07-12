@@ -28,6 +28,11 @@ public class Save implements Command {
 	
 	@Override
 	public void run(MessageReceivedEvent event) throws Exception {
+		if (event.getAuthor().getIdLong() != event.getGuild().getOwnerIdLong()) {
+			TextSender.send(event, "Only server owners can execute this command");
+			return;
+		}
+		
 		long now = System.currentTimeMillis();
 		long expected = lastSaveTime+getHour();
 		if (now > expected) {

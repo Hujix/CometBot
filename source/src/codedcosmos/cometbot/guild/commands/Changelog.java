@@ -3,10 +3,13 @@ package codedcosmos.cometbot.guild.commands;
 import codedcosmos.hyperdiscord.chat.TextSender;
 import codedcosmos.hyperdiscord.command.Command;
 import codedcosmos.hyperdiscord.utils.debug.Log;
+import codedcosmos.hyperdiscord.utils.text.TextSplitter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.io.*;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Changelog implements Command {
 	@Override
@@ -37,7 +40,17 @@ public class Changelog implements Command {
 				text += "\n" + line;
 			}
 			
-			TextSender.send(event, text);
+			// Split if to big
+			String[] messages = new String[] {text};
+			if (text.length() >= 2000-1) {
+				messages = TextSplitter.split(text, 1999);
+			}
+			
+			// Send
+			for (String message : messages) {
+				TextSender.sendThenWait(event, message);
+			}
+			
 		} catch (IOException e) {
 			TextSender.send(event, "Failed to load changelog file!");
 			Log.printErr(e);

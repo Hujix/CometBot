@@ -236,7 +236,7 @@ public class MusicSpeaker extends AudioEventAdapter {
 		try {
 			guild.getAudioManager().setSendingHandler(player.getSendHandler());
 			guild.getAudioManager().openAudioConnection(voiceChannel);
-			guild.getAudioManager().setReceivingHandler(context.getPacketReciever());
+			//guild.getAudioManager().setReceivingHandler(context.getPacketReciever());
 			
 			TextSender.send(textChannel, "On my way!");
 			return true;

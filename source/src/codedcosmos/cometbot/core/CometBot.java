@@ -47,6 +47,9 @@ public class CometBot {
 	// Math
 	public static Random random = new Random();
 	
+	// Save tick
+	public static long timeSinceLastSave = System.currentTimeMillis();
+	
 	public static void main(String[] args) {
 		Log.print("Starting Comet Bot " + VERSION);
 

@@ -43,6 +43,16 @@ public class CometExecutor extends ExecutorThread {
 				guild.getSpeaker().tick100ms();
 				guild.tick100ms();
 			}
+			
+			// Check for save
+			// Save every 24 hours
+			if (System.currentTimeMillis() > CometBot.timeSinceLastSave+(1000*60+60*24)) {
+				for (CometGuildContext guild : CometBot.guilds.getGuilds()) {
+					Log.print("Saving after a 24 hour break");
+					CometBot.timeSinceLastSave = System.currentTimeMillis();
+					guild.save();
+				}
+			}
 		} catch (Exception e) {
 			Log.printErr(e);
 		}

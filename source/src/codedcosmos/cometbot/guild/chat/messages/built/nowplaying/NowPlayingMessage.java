@@ -166,7 +166,7 @@ public class NowPlayingMessage extends DynamicMessage {
 		if (!sent || songHasCompleted) return;
 		
 		// Save likes
-		int newLikes = like.getCount()-1;
+		int newLikes = Math.min(0, like.getCount()-1);
 		speaker.getContext().incrementSongLikes(songLink, newLikes);
 		
 		// Increment stats
