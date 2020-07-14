@@ -1,5 +1,18 @@
 <img align="right" src="https://raw.githubusercontent.com/codedcosmos/CometBot/master/resources/logo/logo.png" height="200" width="200">
 
+# Note: All progress on this project has been halted. 
+Cometbot was a fun and interesting project for me to work on. Today I have made the difficult decision to stop work on the project. The main reason was so that I can spend more time development for my game and a couple other projects.
+
+Remember that this bot is GPLv3, so if you want to fork it you absolutely can. Just change the name and maintain follow the GPLv3 license requirements. 
+If you are looking for a similar project:
+https://github.com/jagrosh/MusicBot
+
+If you wish to contact me about this bot in the future you can find me at:
+codedcosmos.mail@gmail.com
+
+Thank you to all who used/shared my bot.
+-codedcosmos
+
 # CometBot
 ### By codedcosmos
 
