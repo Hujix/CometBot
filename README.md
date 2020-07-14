@@ -8,9 +8,11 @@ If you are looking for a similar project:
 https://github.com/jagrosh/MusicBot
 
 If you wish to contact me about this bot in the future you can find me at:
+
 codedcosmos.mail@gmail.com
 
 Thank you to all who used/shared my bot.
+
 -codedcosmos
 
 # CometBot
